@@ -1,0 +1,28 @@
+# Environment Variables (contains secrets)
+.env
+
+# Virtual Environments
+venv/
+.venv/
+env/
+
+# Python caching
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local SQLite databases & task data
+data/feedback.db
+data/feedback.db-journal
+data/*.db
+data/*.log
+
+# Cloned framework repository
+hermes-agent/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo

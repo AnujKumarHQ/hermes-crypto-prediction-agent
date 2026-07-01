@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrowdWisdomTrading predictions CRYPTO Agent</title>
+    <!-- Google Fonts Outfit & JetBrains Mono for logs -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- TradingView Lightweight Charts for Candlestick Charts (pinned to v4 for compatibility) -->
+    <script src="https://unpkg.com/lightweight-charts@4.2.1/dist/lightweight-charts.standalone.production.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-wand-magic-sparkles brand-logo"></i>
+                <div class="brand-text">
+                    <h1>CrowdWisdom</h1>
+                    <span>QUANT AGENT</span>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" id="btn-nav-dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+                <a href="#" class="nav-item" id="btn-nav-history"><i class="fa-solid fa-history"></i> Execution History</a>
+            </nav>
+            
+            <div class="agent-profile">
+                <div class="avatar">☤</div>
+                <div class="profile-details">
+                    <h3>Hermes Engine</h3>
+                    <p class="status-indicator-container">
+                        <span class="status-indicator offline" id="connection-status"></span>
+                        <span id="connection-status-text">Disconnected</span>
+                    </p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-title">
+                    <h2>Crypto Market Prediction Hub</h2>
+                    <p>Powered by Hermes Agent & Kronos Time-Series Foundation Model</p>
+                </div>
+                
+                <div class="control-panel">
+                    <button class="btn btn-control stop" id="btn-toggle-loop">
+                        <i class="fa-solid fa-play"></i> START AGENT LOOP
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard View -->
+            <div class="dashboard-view" id="dashboard-view">
+                <!-- Top Stat Cards -->
+                <section class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Current Bankroll</span>
+                            <i class="fa-solid fa-wallet icon-wallet"></i>
+                        </div>
+                        <div class="stat-value" id="val-bankroll">$1,000.00</div>
+                        <div class="stat-desc" id="val-pnl-lifetime">PnL: +$0.00</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Win Rate</span>
+                            <i class="fa-solid fa-trophy icon-trophy"></i>
+                        </div>
+                        <div class="stat-value" id="val-win-rate">0.0%</div>
+                        <div class="stat-desc" id="val-total-trades">0 trades recorded</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Prediction Engine</span>
+                            <i class="fa-solid fa-brain icon-engine"></i>
+                        </div>
+                        <div class="stat-value text-small" id="val-engine">Dual-Model</div>
+                        <div class="stat-desc">Kronos + Hermes LLM</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Active Arbitrage</span>
+                            <i class="fa-solid fa-shuffle icon-arbitrage"></i>
+                        </div>
+                        <div class="stat-value text-small" id="val-arb-status">No Opportunities</div>
+                        <div class="stat-desc" id="val-arb-details">Scanning Polymarket vs Kalshi</div>
+                    </div>
+                </section>
+
+                <!-- Asset Detail Columns -->
+                <section class="asset-grid">
+                    <!-- Bitcoin Card -->
+                    <div class="asset-card" id="card-btc">
+                        <div class="asset-header">
+                            <div class="asset-info">
+                                <i class="fa-brands fa-bitcoin asset-icon btc"></i>
+                                <div>
+                                    <h3>Bitcoin Prediction</h3>
+                                    <span class="spot-label">Spot: <strong id="btc-spot">$0.00</strong></span>
+                                </div>
+                            </div>
+                            <div class="arb-badge hidden" id="btc-arb-badge"><i class="fa-solid fa-circle-exclamation"></i> ARB OPPORTUNITY</div>
+                        </div>
+                        
+                        <div class="prediction-info">
+                            <div class="target-price">Target: <strong id="btc-target">$0.00</strong></div>
+                            <div class="direction-gauge">
+                                <div class="gauge-bar">
+                                    <div class="gauge-fill" id="btc-gauge-fill" style="width: 50%;"></div>
+                                </div>
+                                <div class="gauge-labels">
+                                    <span class="lbl-down">Down <span id="btc-prob-down">50%</span></span>
+                                    <span class="lbl-up">Up <span id="btc-prob-up">50%</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="market-odds">
+                            <div class="platform-odds">
+                                <div class="platform-title">Polymarket Odds</div>
+                                <div class="odds-val">YES: <span id="btc-pm-yes">0.00</span> / NO: <span id="btc-pm-no">0.00</span></div>
+                                <div class="wager-desc" id="btc-pm-wager">Wager: None</div>
+                            </div>
+                            <div class="platform-odds">
+                                <div class="platform-title">Kalshi Odds</div>
+                                <div class="odds-val">YES: <span id="btc-ks-yes">0.00</span> / NO: <span id="btc-ks-no">0.00</span></div>
+                                <div class="wager-desc" id="btc-ks-wager">Wager: None</div>
+                            </div>
+                        </div>
+                        <div class="arb-text hidden" id="btc-arb-text"></div>
+                    </div>
+
+                    <!-- Ethereum Card -->
+                    <div class="asset-card" id="card-eth">
+                        <div class="asset-header">
+                            <div class="asset-info">
+                                <i class="fa-brands fa-ethereum asset-icon eth"></i>
+                                <div>
+                                    <h3>Ethereum Prediction</h3>
+                                    <span class="spot-label">Spot: <strong id="eth-spot">$0.00</strong></span>
+                                </div>
+                            </div>
+                            <div class="arb-badge hidden" id="eth-arb-badge"><i class="fa-solid fa-circle-exclamation"></i> ARB OPPORTUNITY</div>
+                        </div>
+                        
+                        <div class="prediction-info">
+                            <div class="target-price">Target: <strong id="eth-target">$0.00</strong></div>
+                            <div class="direction-gauge">
+                                <div class="gauge-bar">
+                                    <div class="gauge-fill" id="eth-gauge-fill" style="width: 50%;"></div>
+                                </div>
+                                <div class="gauge-labels">
+                                    <span class="lbl-down">Down <span id="eth-prob-down">50%</span></span>
+                                    <span class="lbl-up">Up <span id="eth-prob-up">50%</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="market-odds">
+                            <div class="platform-odds">
+                                <div class="platform-title">Polymarket Odds</div>
+                                <div class="odds-val">YES: <span id="eth-pm-yes">0.00</span> / NO: <span id="eth-pm-no">0.00</span></div>
+                                <div class="wager-desc" id="eth-pm-wager">Wager: None</div>
+                            </div>
+                            <div class="platform-odds">
+                                <div class="platform-title">Kalshi Odds</div>
+                                <div class="odds-val">YES: <span id="eth-ks-yes">0.00</span> / NO: <span id="eth-ks-no">0.00</span></div>
+                                <div class="wager-desc" id="eth-ks-wager">Wager: None</div>
+                            </div>
+                        </div>
+                        <div class="arb-text hidden" id="eth-arb-text"></div>
+                    </div>
+                </section>
+
+                <!-- Charting & Logs Section -->
+                <section class="details-section">
+                    <!-- Chart Panel -->
+                    <div class="chart-panel">
+                        <div class="panel-header">
+                            <h3><i class="fa-solid fa-chart-area"></i> Live Candlestick Analysis</h3>
+                            <div class="chart-toggles">
+                                <button class="btn btn-chart-toggle active" id="btn-chart-btc">BTC</button>
+                                <button class="btn btn-chart-toggle" id="btn-chart-eth">ETH</button>
+                            </div>
+                        </div>
+                        <div class="chart-container" id="candlestick-chart"></div>
+                    </div>
+
+                    <!-- Logs Panel -->
+                    <div class="logs-panel">
+                        <div class="panel-header">
+                            <h3><i class="fa-solid fa-terminal"></i> Agent Execution Terminal</h3>
+                        </div>
+                        <div class="terminal-body" id="log-terminal">
+                            <div class="log-row sys">
+                                <span class="log-time">[16:24:28]</span>
+                                <span class="log-tag">[System]</span>
+                                <span class="log-msg">Dashboard loaded. Waiting for Agent connection...</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Execution History View (Hidden by default) -->
+            <div class="history-view hidden" id="history-view">
+                <div class="panel-header">
+                    <h3><i class="fa-solid fa-history"></i> Resolved Trades & Predictions</h3>
+                </div>
+                <div class="table-container">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Asset</th>
+                                <th>Spot Price</th>
+                                <th>Target Price</th>
+                                <th>Prediction</th>
+                                <th>Platform</th>
+                                <th>Wager</th>
+                                <th>Outcome</th>
+                                <th>PnL</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body">
+                            <tr>
+                                <td colspan="9" class="text-center">No trades resolved yet. Start the agent loop to execute wagers.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
